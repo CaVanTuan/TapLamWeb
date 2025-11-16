@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+
   return (
     <footer className="bg-gray-900 text-gray-300 pt-16 pb-8 font-['Times_New_Roman']">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
@@ -48,22 +51,13 @@ export default function Footer() {
             Any questions? Let us know in store at Bac Tu Liem, Ha Noi
           </p>
           <div className="flex space-x-4">
-            <Link
-              href="#"
-              className="hover:text-white transition-colors duration-300"
-            >
+            <Link href="#" className="hover:text-white transition-colors duration-300">
               <Facebook size={20} />
             </Link>
-            <Link
-              href="#"
-              className="hover:text-white transition-colors duration-300"
-            >
+            <Link href="#" className="hover:text-white transition-colors duration-300">
               <Instagram size={20} />
             </Link>
-            <Link
-              href="#"
-              className="hover:text-white transition-colors duration-300"
-            >
+            <Link href="#" className="hover:text-white transition-colors duration-300">
               <Twitter size={20} />
             </Link>
           </div>
@@ -76,6 +70,8 @@ export default function Footer() {
             <input
               type="email"
               placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
             />
             <button
