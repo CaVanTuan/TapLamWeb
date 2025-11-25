@@ -1,6 +1,20 @@
-import api from "./api";;
+import api from "./api";
 
-export const getALl = async () => {
+interface ShippingInfo {
+  fullName: string;
+  phone: string;
+  address: string;
+  note?: string;
+}
+
+interface CreatePaymentData {
+  OrderId?: number;
+  CartItemIds?: number[];
+  PaymentMethod?: string;
+  ShippingInfo: ShippingInfo;
+}
+
+export const getAll = async () => {
     const res = await api.get("/api/Payment/All");
     return res.data;
 };
@@ -15,7 +29,7 @@ export const getByOrderId = async (orderId: number) => {
     return res.data;
 };
 
-export const createPayment = async (data: any) => {
+export const createPayment = async (data: CreatePaymentData) => {
     const res = await api.post("/api/Payment/create", data);
     return res.data;
 };

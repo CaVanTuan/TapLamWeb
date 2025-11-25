@@ -78,6 +78,16 @@ export default function NavBar() {
     router.push("/login");
   };
 
+  const handleSearchClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById("product-search");
+    if (element) {
+      const yOffset = -80;
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
   const isHomePage = pathname === "/";
   const bgClass = isHomePage
     ? isScrolled
@@ -100,7 +110,7 @@ export default function NavBar() {
         </Link>
 
         <div className="flex items-center gap-6 relative">
-          <button className="hover:opacity-80 transition">
+          <button className="hover:opacity-80 transition" onClick={handleSearchClick}>
             <Search size={22} />
           </button>
 

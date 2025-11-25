@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getCart, updateQuantity, deleteCart } from "@/services/cart-services";
 import { useRouter } from "next/navigation";
-import NavBar from "@/components/NavBar"; // import NavBar vào đây
+import NavBar from "@/components/NavBar";
 
 interface CartItem {
   cartItemId: number;
@@ -18,6 +18,7 @@ interface CartItem {
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -40,6 +41,14 @@ export default function CartPage() {
   useEffect(() => {
     fetchCart();
   }, []);
+
+  const toggleSelect = (productId: number) => {
+    setSelectedItems((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
+    );
+  };
 
   const handleQuantityChange = async (item: CartItem, delta: number) => {
     const newQuantity = item.quantity + delta;
@@ -64,24 +73,38 @@ export default function CartPage() {
     try {
       await deleteCart(item.productId);
       setCartItems((prev) => prev.filter((ci) => ci.productId !== item.productId));
+      setSelectedItems((prev) => prev.filter((id) => id !== item.productId));
       window.dispatchEvent(new CustomEvent("cartChanged", { detail: { added: -item.quantity } }));
     } catch (err) {
       console.error("Xóa sản phẩm thất bại:", err);
     }
   };
 
-  const totalPrice = cartItems.reduce(
+  const selectedProducts = cartItems.filter((item) =>
+    selectedItems.includes(item.productId)
+  );
+
+  const totalPrice = selectedProducts.reduce(
     (sum, item) => sum + (item.product?.price || 0) * item.quantity,
     0
   );
 
+  const handleCheckout = () => {
+    if (selectedProducts.length === 0) {
+      alert("Bạn chưa chọn sản phẩm nào!");
+      return;
+    }
+
+    localStorage.setItem("checkoutItems", JSON.stringify(selectedProducts));
+
+    router.push("/checkout");
+  };
+
   return (
     <>
-      {/* Navbar */}
       <NavBar />
 
-      {/* Cart Content */}
-      <section className="max-w-7xl mx-auto px-4 py-32"> {/* py-32 để không bị navbar fixed che nội dung */}
+      <section className="max-w-7xl mx-auto px-4 py-32">
         <h2 className="text-3xl font-bold mb-8">Giỏ hàng của bạn</h2>
 
         {loading ? (
@@ -96,11 +119,19 @@ export default function CartPage() {
                   key={item.cartItemId}
                   className="flex items-center gap-4 bg-white p-4 rounded-lg shadow"
                 >
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item.productId)}
+                    onChange={() => toggleSelect(item.productId)}
+                    className="w-5 h-5"
+                  />
+
                   <img
                     src={item.product?.imageUrl}
                     alt={item.product?.name}
                     className="w-24 h-24 object-cover rounded"
                   />
+
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg">{item.product?.name}</h3>
                     <p className="text-gray-600">
@@ -124,6 +155,7 @@ export default function CartPage() {
                       </button>
                     </div>
                   </div>
+
                   <button
                     onClick={() => handleDelete(item)}
                     className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
@@ -139,7 +171,10 @@ export default function CartPage() {
                 Tổng:{" "}
                 {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(totalPrice)}
               </span>
-              <button className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800">
+              <button
+                onClick={handleCheckout}
+                className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800"
+              >
                 Thanh toán
               </button>
             </div>

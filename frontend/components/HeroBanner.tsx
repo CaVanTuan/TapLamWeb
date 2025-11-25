@@ -13,7 +13,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-// 🧩 Interface cho sản phẩm
+// Interface cho sản phẩm
 interface Product {
   id: number;
   name: string;
@@ -21,14 +21,14 @@ interface Product {
   imageUrl: string | null;
 }
 
-// 💰 Hàm định dạng giá tiền
+// Hàm định dạng giá tiền
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
   }).format(price);
 
-// 💀 Skeleton khi đang tải
+// Skeleton khi đang tải
 const HeroSkeleton = () => (
   <section className="relative bg-gray-700 bg-center h-[85vh] animate-pulse font-[Times_New_Roman]">
     <div className="absolute inset-0 bg-black/30"></div>
@@ -41,7 +41,7 @@ const HeroSkeleton = () => (
   </section>
 );
 
-// 📸 SlideContent: nội dung cho mỗi slide
+// SlideContent: nội dung cho mỗi slide
 const SlideContent = ({ product }: { product: Product }) => {
   const swiperSlide = useSwiperSlide();
   const isActive = swiperSlide.isActive;
@@ -93,7 +93,7 @@ const SlideContent = ({ product }: { product: Product }) => {
         animate={isActive ? "visible" : "hidden"}
       >
         <Link
-          href={`/product/${product.id}`}
+          href={`/products/${product.id}`}
           className="inline-block text-base md:text-lg font-medium text-white border-2 border-white px-8 py-3 rounded-lg shadow-md hover:bg-white hover:text-black hover:shadow-lg transition-all duration-300"
         >
           🛍️ Xem chi tiết

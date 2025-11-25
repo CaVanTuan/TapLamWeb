@@ -95,7 +95,7 @@ export default function ProductBanner() {
         </div>
 
         {/* Search + Sort */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        <div id="product-search" className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
           <input
             type="text"
             placeholder="Tìm kiếm sản phẩm..."
